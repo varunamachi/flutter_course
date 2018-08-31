@@ -20,4 +20,3 @@ class Bloc extends Object with Validators {
 
 }
 
-final bloc = new Bloc();
