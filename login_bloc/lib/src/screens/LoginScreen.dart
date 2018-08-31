@@ -5,22 +5,21 @@ import '../blocs/bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   @protected
-
   @override
   Widget build(BuildContext context) {
     var bloc = Provider.of(context);
-    return  Container(
-        margin: EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            emailWidget(bloc),
-            passwordWidget(bloc),
-            Container(
-              margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-            ),
-            submitButton(bloc),
-          ],
-        ),
+    return Container(
+      margin: EdgeInsets.all(20.0),
+      child: Column(
+        children: <Widget>[
+          emailWidget(bloc),
+          passwordWidget(bloc),
+          Container(
+            margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          ),
+          submitButton(bloc),
+        ],
+      ),
     );
   }
 
@@ -58,11 +57,18 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget submitButton(Bloc bloc) {
-    return RaisedButton(
-      child: Text('Submit'),
-      color: Colors.blue,
-      textColor: Colors.white,
-      onPressed: () {},
+    return StreamBuilder(
+      stream: bloc.submitValid,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        return RaisedButton(
+          child: Text('Submit'),
+          color: Colors.blue,
+          textColor: Colors.white,
+          onPressed: snapshot.hasData
+              ? bloc.submit
+              : null,
+        );
+      },
     );
   }
 }
