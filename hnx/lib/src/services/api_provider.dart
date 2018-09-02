@@ -4,8 +4,9 @@ import 'dart:convert' show json;
 import 'package:http/http.dart' show Client;
 
 import '../models/item_model.dart';
+import 'abstract_source.dart';
 
-class ApiProvider {
+class ApiProvider extends AbstractSource {
   static const _TOP_URL =
       "https://hacker-news.firebaseio.com/v0/topstories.json";
 
@@ -13,16 +14,17 @@ class ApiProvider {
 
   Client client = new Client();
 
-  Future<List<dynamic>> fetchTopIds() async {
+  Future<List<int>> fetchTopIds() async {
     var resp = await client.get(_TOP_URL);
     if (resp.statusCode == 200) {
       final ids = json.decode(resp.body);
-      return ids;
+      return ids.cast<int>();
     }
-    return new List<dynamic>();
+    return new List<int>();
     
   }
 
+  @override
   Future<ItemModel> fetchItem(int id) async {
     final url = _STORY_URL + "$id.json";
     final resp = await client.get(url);

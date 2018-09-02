@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ItemModel {
   final int id;
   final bool deleted;
@@ -28,18 +30,51 @@ class ItemModel {
       this.title,
       this.descendants});
 
-  ItemModel.fromJSON(Map<String, dynamic> jsonData)
-      : id = jsonData["id"],
-        deleted = jsonData["deleted"],
-        type = jsonData["type"],
-        by = jsonData["by"],
-        time = jsonData["time"],
-        text = jsonData["text"],
-        dead = jsonData["dead"],
-        parent = jsonData["parent"],
-        kids = jsonData["kids"],
-        url = jsonData["url"],
-        score = jsonData["score"],
-        title = jsonData["title"],
-        descendants = jsonData["descendants"];
+  ItemModel.fromJSON(Map<String, dynamic> data)
+      : id = data["id"],
+        deleted = data["deleted"],
+        type = data["type"],
+        by = data["by"],
+        time = data["time"],
+        text = data["text"],
+        dead = data["dead"],
+        parent = data["parent"],
+        kids = data["kids"],
+        url = data["url"],
+        score = data["score"],
+        title = data["title"],
+        descendants = data["descendants"];
+
+  ItemModel.fromDb(Map<String, dynamic> data)
+      : id = data["id"],
+        deleted = data["deleted"] != 0,
+        type = data["type"],
+        by = data["by"],
+        time = data["time"],
+        text = data["text"],
+        dead = data["dead"] != 0,
+        parent = data["parent"],
+        kids = jsonDecode(data["kids"]),
+        url = data["url"],
+        score = data["score"],
+        title = data["title"],
+        descendants = data["descendants"];
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "id": id,
+      "deleted": deleted ? 1 : 0,
+      "type": type,
+      "by": by,
+      "time": time,
+      "text": text,
+      "dead": dead ? 1 : 0,
+      "parent": parent,
+      "kids": jsonEncode(kids),
+      "url": url,
+      "score": score,
+      "title": title,
+      "descendants": descendants,
+    };
+  }
 }
