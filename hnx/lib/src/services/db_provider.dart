@@ -9,11 +9,10 @@ import '../models/item_model.dart';
 import 'abstract_source.dart';
 import 'abstract_cache.dart';
 
-class DbProvider implements AbstractSource, AbstractCahce{
+class DbProvider implements AbstractSource, AbstractCahce {
   Database db;
 
   DbProvider();
-
 
   @override
   Future<bool> init() async {
@@ -55,11 +54,20 @@ class DbProvider implements AbstractSource, AbstractCahce{
   }
 
   Future<bool> addItem(ItemModel item) async {
-    return await this.db.insert("items", item.toMap()) > 0;
+    return await this.db.insert(
+              "items",
+              item.toMap(),
+              conflictAlgorithm: ConflictAlgorithm.ignore,
+            ) > 0;
   }
 
   @override
   Future<List<int>> fetchTopIds() {
     return null;
+  }
+
+  @override
+  Future<bool> clear() async {
+    return await db.delete("items") != 0;
   }
 }

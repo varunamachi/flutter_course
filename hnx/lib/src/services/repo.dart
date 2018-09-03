@@ -39,7 +39,7 @@ class Repo {
       item = await source.fetchItem(id);
       if (item != null) {
         for (var cache in this.caches) {
-          cache.addItem(item);
+            cache.addItem(item);
         }
         break;
       }
@@ -53,5 +53,12 @@ class Repo {
 
   void addCache(AbstractCahce cache) {
     this.caches.add(cache);
+  }
+
+  Future<bool> clearCache() async {
+    for (var cache in this.caches) {
+      await cache.clear();
+    }
+    return true;
   }
 }

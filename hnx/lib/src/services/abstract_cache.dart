@@ -6,4 +6,6 @@ abstract class AbstractCahce {
   Future<bool> addItem(ItemModel item);
 
   Future<bool> init();
+
+  Future<bool> clear();
 }

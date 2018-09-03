@@ -32,18 +32,18 @@ class ItemModel {
 
   ItemModel.fromJSON(Map<String, dynamic> data)
       : id = data["id"],
-        deleted = data["deleted"],
+        deleted = data["deleted"] ?? false,
         type = data["type"],
         by = data["by"],
         time = data["time"],
         text = data["text"],
-        dead = data["dead"],
+        dead = data["dead"] ?? false,
         parent = data["parent"],
         kids = data["kids"],
         url = data["url"],
         score = data["score"],
         title = data["title"],
-        descendants = data["descendants"];
+        descendants = data["descendants"] ?? 0;
 
   ItemModel.fromDb(Map<String, dynamic> data)
       : id = data["id"],

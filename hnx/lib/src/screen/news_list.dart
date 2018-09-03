@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 import '../blocs/stories_provider.dart';
 import '../blocs/stories_bloc.dart';
+import "../widgets/news_list_tile.dart";
+import "../widgets/refresh.dart";
 
 class NewsList extends StatelessWidget {
   @override
@@ -35,15 +37,19 @@ class NewsList extends StatelessWidget {
     // );
     return StreamBuilder(
       stream: bloc.topIds,
-      builder: (BuildContext context, AsyncSnapshot<List<int>> asnap){
+      builder: (BuildContext context, AsyncSnapshot<List<int>> asnap) {
         if (!asnap.hasData) {
-          return Text("Loading....");
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
-        return ListView.builder(
-          itemCount: asnap.data.length,
-          itemBuilder: (BuildContext ctx, int index) {
-            return Text("${asnap.data[index]}");
-          }
+        return Refresh(
+          child: ListView.builder(
+              itemCount: asnap.data.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                bloc.fetchItem(asnap.data[index]);
+                return NewsListTile(id: asnap.data[index]);
+              }),
         );
       },
     );
@@ -51,7 +57,7 @@ class NewsList extends StatelessWidget {
 
   Future<ItemModel> getItem(StoriesBloc bloc) {
     return Future.delayed(
-      Duration(seconds : 2),
+      Duration(seconds: 2),
       () => ItemModel(),
     );
   }
