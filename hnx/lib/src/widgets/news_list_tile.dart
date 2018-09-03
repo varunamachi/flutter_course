@@ -28,14 +28,14 @@ class NewsListTile extends StatelessWidget {
             if (!asn.hasData) {
               return LoadingContainer();
             }
-            return buildTile(asn.data);
+            return buildTile(ctx, asn.data);
           },
         );
       },
     );
   }
 
-  Widget buildTile(ItemModel item) {
+  Widget buildTile(BuildContext ctx, ItemModel item) {
     return Column(
       children: <Widget>[
         ListTile(
@@ -47,6 +47,9 @@ class NewsListTile extends StatelessWidget {
               Text("${item?.descendants}"),
             ],
           ),
+          onTap: () {
+            Navigator.pushNamed(ctx, "/item/${item.id}");
+          },
         ),
         Divider(
           height: 8.0,

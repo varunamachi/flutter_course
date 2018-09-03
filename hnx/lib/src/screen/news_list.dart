@@ -22,19 +22,6 @@ class NewsList extends StatelessWidget {
   }
 
   Widget buildList(StoriesBloc bloc) {
-    // return ListView.builder(
-    //   itemCount: 1000,
-    //   itemBuilder: (BuildContext context, int index) {
-    //     return FutureBuilder(
-    //       future: getItem(bloc),
-    //       builder: (BuildContext context, AsyncSnapshot<ItemModel> snapshot) {
-    //         return snapshot.hasData
-    //           ? Text("Done!")
-    //           : Text("Loading...");
-    //       },
-    //     );
-    //   },
-    // );
     return StreamBuilder(
       stream: bloc.topIds,
       builder: (BuildContext context, AsyncSnapshot<List<int>> asnap) {
@@ -54,11 +41,6 @@ class NewsList extends StatelessWidget {
       },
     );
   }
-
-  Future<ItemModel> getItem(StoriesBloc bloc) {
-    return Future.delayed(
-      Duration(seconds: 2),
-      () => ItemModel(),
-    );
-  }
+  
+  
 }
