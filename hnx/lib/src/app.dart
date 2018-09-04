@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'blocs/stories_provider.dart';
+import 'blocs/comments_provider.dart';
+
 import 'screen/news_list.dart';
 import 'screen/news_details.dart';
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoriesProvider(
-      child: MaterialApp(
-        title: "HN Walker",
-        home: NewsList(),
-        onUnknownRoute: routes,
+    return CommentsProvider(
+      child: StoriesProvider(
+        child: MaterialApp(
+          title: "HN Walker",
+          home: NewsList(),
+          onUnknownRoute: routes,
+        ),
       ),
     );
   }
@@ -25,11 +29,13 @@ class App extends StatelessWidget {
       final index = settings.name.indexOf("/item/");
       if (index != -1) {
         final idStr = settings.name.substring(index + 6);
-        print(idStr);
         final id = int.parse(idStr);
         if (id is int) {
           return MaterialPageRoute(
-            builder: (BuildContext ctx) => NewsDetails(id: id),
+            builder: (BuildContext ctx) {
+              CommentsProvider.of(ctx).fetchComments(id); //async fetch
+              return NewsDetails(id: id);
+            }
           );
         }
         return MaterialPageRoute(
