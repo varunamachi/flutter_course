@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../blocs/comments_provider.dart';
 import '../models/item_model.dart';
 import '../widgets/loading_container.dart';
+import '../widgets/comment.dart';
 
 class NewsDetails extends StatelessWidget {
   final int id;
@@ -27,23 +28,36 @@ class NewsDetails extends StatelessWidget {
       stream: bloc.comments,
       builder:
           (BuildContext ctx, AsyncSnapshot<Map<int, Future<ItemModel>>> asn) {
-            if (!asn.hasData) {
-              return CircularProgressIndicator();
+        if (!asn.hasData) {
+          return CircularProgressIndicator();
+        }
+        final itemFuture = asn.data[id];
+        return FutureBuilder(
+          future: itemFuture,
+          builder: (BuildContext ctx, AsyncSnapshot<ItemModel> itemAsn) {
+            if (!itemAsn.hasData) {
+              return LoadingContainer();
             }
-            final itemFuture = asn.data[id];
-            return FutureBuilder(
-              future: itemFuture,
-              builder: (BuildContext ctx, AsyncSnapshot<ItemModel> asn) {
-                if (!asn.hasData) {
-                  return LoadingContainer();
-                }
-                return buildTitle(asn.data);
-              },
-            );
+            return buildStory(itemAsn.data, asn.data);
           },
+        );
+      },
     );
   }
 
+  Widget buildStory(ItemModel story, Map<int, Future<ItemModel>> items) {
+    final children = <Widget>[];
+    children.add(buildTitle(story));
+    final comments = story.kids.map((kidId) {
+      return Comment(id: kidId, model: items);
+    }).toList();
+    children.addAll(comments);
+
+    return ListView(
+      children: children,
+    );
+  }
+ 
   Widget buildTitle(ItemModel model) {
     return Container(
       margin: EdgeInsets.all(10.0),

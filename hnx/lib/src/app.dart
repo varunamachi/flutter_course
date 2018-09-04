@@ -22,8 +22,13 @@ class App extends StatelessWidget {
 
   Route<dynamic> routes(RouteSettings settings) {
     if (settings.name == "/") {
+      
       return MaterialPageRoute(
-        builder: (BuildContext ctx) => NewsList(),
+        builder: (BuildContext ctx) {
+          final storiesBloc = StoriesProvider.of(ctx);
+          storiesBloc.fetchTopIds();
+          return NewsList();
+        } 
       );
     } else {
       final index = settings.name.indexOf("/item/");
